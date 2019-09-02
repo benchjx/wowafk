@@ -27,7 +27,7 @@ jumpTimer:
   if (activeWindow != "World of Warcraft") {
     ControlSend, , {Space}, ahk_exe Wow.exe
   }
-  else if (activeWindow = "World of Warcraft" && A_TimeIdle > 10000) {
+  else if (activeWindow = "World of Warcraft" && A_TimeIdle > 5000) {
     ControlSend, , {Space}, ahk_exe Wow.exe
   }
 
