@@ -8,12 +8,30 @@ SetMouseDelay, 0
 #InstallKeybdHook
 #InstallMouseHook
 
-WinGet, bNetWindow, ProcessPath, ahk_exe Battle.net.exe
+WinGet, bnetWindow, ProcessPath, ahk_exe Battle.net.exe
+WinGet, wowWindow, ProcessPath, ahk_exe Wow.exe
+
+if (bnetWindow = "") {
+  MsgBox, Start Battle.net and try again
+  ExitApp, "Battle.net not found"
+}
+if (wowWindow = "") {
+  WinActivate, ahk_exe Battle.net.exe
+  
+  Loop Images/*.*
+  {
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/%A_LoopFileFullPath%
+
+    if (X) {
+      MouseClick, left, X, Y, 2
+      break
+    }
+  }
+} else {
+  ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
+}
 
 
-
-
-ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
 Random, rand, 5, 22
 rand := rand*60*1000
 SetTimer, jumpTimer, %rand%
