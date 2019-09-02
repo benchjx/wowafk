@@ -17,9 +17,9 @@ if (bnetWindow = "") {
 if (wowWindow = "") {
   WinActivate, ahk_exe Battle.net.exe
   
-  Loop Images/*.*
+  Loop images/*.*
   {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/%A_LoopFileFullPath%
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
     if (X) {
       MouseClick, left, X, Y, 2
@@ -79,7 +79,8 @@ loopTime() {
           WinClose, ahk_exe Wow.exe
           Sleep, 2000
           WinActivate, ahk_exe Battle.net.exe
-          Sleep, 5000
+          Sleep, 2000
+          Reload
         }
       }
 
