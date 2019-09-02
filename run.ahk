@@ -46,9 +46,10 @@ loopTime() {
     WinGet, wowID, ID, World of Warcraft ahk_exe Wow.exe
     haystackBitmap := pBitmap(wowID)
 
+    ; Loop images for dealing with buttons
     Loop, images/*.*
     {
-      arr := ""
+      arr := "" ; empty var f or Gdip_ImageSearch to fill with cooridnates
       needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
@@ -64,10 +65,10 @@ loopTime() {
       Gdip_DisposeImage(needleBitmap)
     }
 
-
+    ; Loop images indicating a disconnect occured
     Loop, images/dc/*.*
     {
-      arr := ""
+      arr := "" ; empty var f or Gdip_ImageSearch to fill with cooridnates
       needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
@@ -121,7 +122,7 @@ Return
 
 
 pBitmap(HWID) {
-  image := HWID ; Some sort of hwnd. 
+  image := HWID
 
   image := WinExist(image) ? WinExist(image) : image
 
