@@ -1,5 +1,4 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SetBatchLines, 100ms
 SetMouseDelay, 0
@@ -27,6 +26,7 @@ if (wowWindow = "") {
       break
     }
   }
+  Reload
 } else {
   ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
 }
@@ -46,15 +46,15 @@ loopTime() {
     WinGet, wowID, ID, World of Warcraft ahk_exe Wow.exe
     haystackBitmap := pBitmap(wowID)
 
-    Loop, Images/*.*
+    Loop, images/*.*
     {
       arr := ""
-      needleBitmap := Gdip_CreateBitmapFromFile("Images/"A_LoopFileFullPath)
+      needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
       if (match > 0) {
         WinActivate, World of Warcraft ahk_exe Wow.exe
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/%A_LoopFileFullPath%
+        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
         if (X) {
           MouseClick, left, X, Y, 2
@@ -65,15 +65,15 @@ loopTime() {
     }
 
 
-    Loop, Images/DC/*.*
+    Loop, images/dc/*.*
     {
       arr := ""
-      needleBitmap := Gdip_CreateBitmapFromFile("Images/DC/"A_LoopFileFullPath)
+      needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
       if (match > 0) {
         WinActivate, World of Warcraft ahk_exe Wow.exe
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/DC/%A_LoopFileFullPath%
+        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
 
         if (X) {
           WinClose, ahk_exe Wow.exe
