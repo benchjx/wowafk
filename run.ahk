@@ -8,63 +8,52 @@ SetMouseDelay, 0
 #InstallKeybdHook
 #InstallMouseHook
 
-
+WinGet, bNetWindow, ProcessPath, ahk_exe Battle.net.exe
 
 
 
 
 ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
-Random, rand, 5, 20
+Random, rand, 5, 22
 rand := rand*60*1000
 SetTimer, jumpTimer, %rand%
 
 
 
-
+; Main loop function
 loopTime() {
   Loop
   {
-
     pToken := Gdip_Startup()
     WinGet, wowID, ID, World of Warcraft ahk_exe Wow.exe
-
     haystackBitmap := pBitmap(wowID)
-
 
     Loop, Images/*.*
     {
-      
       arr := ""
       needleBitmap := Gdip_CreateBitmapFromFile("Images/"A_LoopFileFullPath)
-
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
       if (match > 0) {
-        
         WinActivate, World of Warcraft ahk_exe Wow.exe
         ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/%A_LoopFileFullPath%
 
         if (X) {
           MouseClick, left, X, Y, 2
         }
-        
       }
 
       Gdip_DisposeImage(needleBitmap)
-      
     }
 
 
     Loop, Images/DC/*.*
     {
-      
       arr := ""
       needleBitmap := Gdip_CreateBitmapFromFile("Images/DC/"A_LoopFileFullPath)
-
       match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
       if (match > 0) {
-        
         WinActivate, World of Warcraft ahk_exe Wow.exe
         ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 Images/DC/%A_LoopFileFullPath%
 
@@ -74,13 +63,10 @@ loopTime() {
           WinActivate, ahk_exe Battle.net.exe
           Sleep, 5000
         }
-        
       }
 
       Gdip_DisposeImage(needleBitmap)
-      
     }
-
 
     Gdip_DisposeImage(haystackBitmap)
     Gdip_Shutdown(pToken)
@@ -88,24 +74,26 @@ loopTime() {
   }
 }
 
-
-
+; Call loop function to initiatlize on script startup
 loopTime()
 
+; Reload and Pause keys
 ~PgDn::Reload
 ~Pause::Pause
 
+
+; Timer label
 jumpTimer:
   WinGetTitle, activeWindow, A
 
-  if (activeWindow = "World of Warcraft" && A_TimeIdle > (5*60*1000)) {
-    Send, {Space}
+  if (activeWindow = "World of Warcraft" && A_TimeIdle < 5000) {
+    
   }
-  else if (activeWindow != "World of Warcraft") {
+  else {
     ControlSend, , {Space}, ahk_exe Wow.exe
   }
   
-  Random, rand, 5, 20
+  Random, rand, 5, 22
   rand := rand*60*1000
   SetTimer, jumpTimer, %rand%
 Return
