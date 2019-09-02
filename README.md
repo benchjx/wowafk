@@ -2,6 +2,7 @@
 
 AFK macro for World of Warcraft classic
 
+
 ## Usage
 
 Starts automatically when macro is launched and will indicate this by jumping your character once.
@@ -9,7 +10,7 @@ Starts automatically when macro is launched and will indicate this by jumping yo
 Once started it will keep your character in game by jumping once every 10-20 minutes or so. 
 
 
-### For supported resolutions
+### (For supported resolutions)
 
 If diconnected to character screen the script will press the "Enter world" button on screen.
 
