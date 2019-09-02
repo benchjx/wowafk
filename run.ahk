@@ -23,11 +23,12 @@ LoopTime() {
 
 jumpTimer:
   WinGetActiveTitle, activeWindow
+
   if (activeWindow != "World of Warcraft") {
     ControlSend, , {Space}, ahk_exe Wow.exe
   }
-  else if () {
-
+  else if (activeWindow = "World of Warcraft" && A_TimeIdle > 10000) {
+    ControlSend, , {Space}, ahk_exe Wow.exe
   }
 
 
