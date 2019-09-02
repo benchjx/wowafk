@@ -8,6 +8,6 @@ Starts automatically when macro is launched and will indicate this by jumping yo
 
 ### Hotkeys
 
-Page down: Restart the macro
+**Page down:** Restart the macro
 
-Pause: Pauses the macro
+**Pause:** Pauses the macro
