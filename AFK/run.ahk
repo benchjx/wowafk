@@ -7,8 +7,9 @@ SetMouseDelay, 0
 #InstallKeybdHook
 #InstallMouseHook
 
-wowWindowExists := WinExist(ahk_exe Wow.exe)
-bnetWindowExists := WinExist(ahk_exe Battle.net.exe)
+wowWindowExists := WinExist("ahk_exe Wow.exe")
+bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
+
 
 if (!bnetWindowExists) { ; if battle.net client is not started
   MsgBox, Start Battle.net and try again
