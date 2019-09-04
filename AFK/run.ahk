@@ -42,7 +42,7 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 loopTime() {
   Loop
   {
-    if (WinExist(ahk_exe Wow.exe)) { ; If WoW window exists go ahead with main function
+    if (WinExist("ahk_exe Wow.exe")) { ; If WoW window exists go ahead with main function
       pToken := Gdip_Startup() ; get gdip token to utilize library
       WinGet, wowHWID, ID, World of Warcraft ahk_exe Wow.exe ; get WoW window HWID
       haystackBitmap := pBitmap(wowHWID) ; create bitmap from WoW window to imagesearch through
