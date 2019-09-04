@@ -1,22 +1,22 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-SetBatchLines, 100ms
+SetBatchLines, 100ms ; 100ms to ensure a low use of cpu
 SetMouseDelay, 0
 #include, Gdip_All.ahk
 #Include, Gdip_ImageSearch.ahk
 #InstallKeybdHook
 #InstallMouseHook
 
-WinGet, bnetWindow, ProcessPath, ahk_exe Battle.net.exe
-WinGet, wowWindow, ProcessPath, ahk_exe Wow.exe
+wowWindowExists := WinExist(ahk_exe Wow.exe)
+bnetWindowExists := WinExist(ahk_exe Battle.net.exe)
 
-if (bnetWindow = "") {
+if (!bnetWindowExists) { ; if battle.net client is not started
   MsgBox, Start Battle.net and try again
   ExitApp, "Battle.net not found"
 }
-if (wowWindow = "") {
+if (!wowWindowExists) { ; if world of warcraft is not started
   WinActivate, ahk_exe Battle.net.exe
-  
+
   Loop images/*.*
   {
     ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
@@ -27,100 +27,126 @@ if (wowWindow = "") {
     }
   }
   Reload
-} else {
+} else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
   ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
 }
 
+Random, rand, 9, 24 ; afk timer random wait time in minutes
+rand := rand*60*1000 ; convert minutes to milliseconds
+SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 
-Random, rand, 5, 22
-rand := rand*60*1000
-SetTimer, jumpTimer, %rand%
-
-
-
-; Main loop function
+/*
+* Main loop function
+*/
 loopTime() {
   Loop
   {
-    pToken := Gdip_Startup()
-    WinGet, wowID, ID, World of Warcraft ahk_exe Wow.exe
-    haystackBitmap := pBitmap(wowID)
+    if (WinExist(ahk_exe Wow.exe)) { ; If WoW window exists go ahead with main function
+      pToken := Gdip_Startup() ; get gdip token to utilize library
+      WinGet, wowHWID, ID, World of Warcraft ahk_exe Wow.exe ; get WoW window HWID
+      haystackBitmap := pBitmap(wowHWID) ; create bitmap from WoW window to imagesearch through
 
-    ; Loop images for dealing with buttons
-    Loop, images/*.*
-    {
-      arr := "" ; empty var f or Gdip_ImageSearch to fill with cooridnates
-      needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
-      match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
-      if (match > 0) {
-        WinActivate, World of Warcraft ahk_exe Wow.exe
+      Loop, images/*.* ; Loop images for dealing with buttons/serverlist
+      {
+        arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
+        needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
+        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+
+        if (match > 0) {
+          WinActivate, World of Warcraft ahk_exe Wow.exe
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+
+          if (X) {
+            MouseClick, left, X, Y, 2
+          }
+        }
+
+        Gdip_DisposeImage(needleBitmap) ; remove needle image from memory
+      }
+
+      Loop, images/dc/*.* ; Loop images indicating a disconnect occured
+      {
+        arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
+        needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
+        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+
+        if (match > 0) {
+          WinActivate, World of Warcraft ahk_exe Wow.exe
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
+
+          if (X) {
+            WinClose, ahk_exe Wow.exe
+            Sleep, 2000
+            WinActivate, ahk_exe Battle.net.exe
+            Sleep, 2000
+            Reload
+          }
+        }
+
+        Gdip_DisposeImage(needleBitmap) ; remove needle image from memory
+      }
+
+      Gdip_DisposeImage(haystackBitmap) ; remove haystack image from memory
+      Gdip_Shutdown(pToken) ; remove token
+    }
+    else { ; else bring Battle.net client to front and start game
+      WinActivate, ahk_exe Battle.net.exe
+
+      Loop images/*.* ; loop regular images for dealing with buttons/serverlist
+      {
         ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
         if (X) {
           MouseClick, left, X, Y, 2
+          break
         }
       }
-
-      Gdip_DisposeImage(needleBitmap)
+      Reload
     }
-
-    ; Loop images indicating a disconnect occured
-    Loop, images/dc/*.*
-    {
-      arr := "" ; empty var f or Gdip_ImageSearch to fill with cooridnates
-      needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
-      match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
-
-      if (match > 0) {
-        WinActivate, World of Warcraft ahk_exe Wow.exe
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
-
-        if (X) {
-          WinClose, ahk_exe Wow.exe
-          Sleep, 2000
-          WinActivate, ahk_exe Battle.net.exe
-          Sleep, 2000
-          Reload
-        }
-      }
-
-      Gdip_DisposeImage(needleBitmap)
-    }
-
-    Gdip_DisposeImage(haystackBitmap)
-    Gdip_Shutdown(pToken)
     Sleep 1000
   }
 }
 
-; Call loop function to initiatlize on script startup
+
+/*
+* Call loop function to initiatlize on script startup
+*/
 loopTime()
 
-; Reload and Pause keys
+/*
+* Reload and Pause keys
+*/
 ~PgDn::Reload
 ~Pause::Pause
 
 
-; Timer label
+/*
+* Timer label
+*/
 jumpTimer:
   WinGetTitle, activeWindow, A
 
+
   if (activeWindow = "World of Warcraft" && A_TimeIdle < 5000) {
-    
+    /*
+    * If mouse/keeyboard idle time is less than 5 seconds AND WoW is active then dont do anything
+    */
   }
   else {
     ControlSend, , {Space}, ahk_exe Wow.exe
   }
-  
-  Random, rand, 5, 22
-  rand := rand*60*1000
-  SetTimer, jumpTimer, %rand%
+
+  Random, rand, 9, 24 ; new afk timer random wait time in minutes
+  rand := rand*60*1000 ; convert minutes to milliseconds
+  SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
 
 
 
-
+/*
+* Function to get bitmap from HWID
+*/
 pBitmap(HWID) {
   image := HWID
 
