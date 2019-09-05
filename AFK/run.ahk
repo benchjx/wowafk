@@ -14,7 +14,8 @@ bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 
-FileRead, bnetPath, path to battle.net.txt
+
+FileRead, bnetPath, battle.net path.txt
 if (ErrorLevel = 1) {
   setbatchlines, -1
   bnetFolder = Battle.net
@@ -29,7 +30,7 @@ if (ErrorLevel = 1) {
     {
       if (A_LoopFileName = "Battle.net.exe") {
         foundFile := 1
-        FileAppend , %A_LoopFileFullPath%, path to battle.net.txt, UTF-8
+        FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
         Goto, startLabel
       }
     }
