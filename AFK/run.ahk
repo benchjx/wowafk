@@ -1,4 +1,5 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#SingleInstance
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SetBatchLines, 100ms ; 100ms to ensure a low use of cpu
 SetMouseDelay, 0
@@ -6,10 +7,13 @@ SetMouseDelay, 0
 #Include, Gdip_ImageSearch.ahk
 #InstallKeybdHook
 #InstallMouseHook
-#SingleInstance
 DetectHiddenWindows, On
+OnExit("ExitFunc")
 
-wowWindowExists := WinExist("ahk_exe Wow.exe")
+
+
+pToken := Gdip_Startup() ; get gdip token to utilize library
+wowWindowExists := WinExist("ahk_class GxWindowClass")
 bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
@@ -36,7 +40,7 @@ if (ErrorLevel = 1) {
     }
   }
 }
-else if (ErrorLevel = 0) {
+else if (ErrorLevel = 0 && !wowWindowExists) {
   Run, %bnetPath%
   Goto, bnetLabel
 }
@@ -45,7 +49,7 @@ else if (ErrorLevel = 0) {
 
 
 startLabel:
-SetBatchLines, 100ms
+SetBatchLines, 200ms
 
 
 
@@ -68,7 +72,7 @@ if (!wowWindowExists) { ; if world of warcraft is not started
   }
   Reload
 } else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
-  ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
+  ControlSend, , {Space}, ahk_class GxWindowClass
 }
 
 Random, rand, 9, 24 ; afk timer random wait time in minutes
@@ -79,12 +83,15 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 * Main loop function
 */
 loopTime() {
+  Sleep 2000
   Loop
   {
-    if (WinExist("ahk_exe Wow.exe")) { ; If WoW window exists go ahead with main function
-      pToken := Gdip_Startup() ; get gdip token to utilize library
-      WinGet, wowHWID, ID, World of Warcraft ahk_exe Wow.exe ; get WoW window HWID
-      haystackBitmap := pBitmap(wowHWID) ; create bitmap from WoW window to imagesearch through
+    if (WinExist("ahk_class GxWindowClass")) { ; If WoW window exists go ahead with main function
+      WinGet, wowHWND, ID, ahk_class GxWindowClass ; get WoW window HWID
+      haystackBitmap := pBitmap(wowHWND)
+
+
+      Gdip_saveBitmapToFile(haystackBitmap, "test.png")
 
 
       Loop, images/*.* ; Loop images for dealing with buttons/serverlist
@@ -94,7 +101,7 @@ loopTime() {
         match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
         if (match > 0) {
-          WinActivate, World of Warcraft ahk_exe Wow.exe
+          WinActivate, ahk_class GxWindowClass
           ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
           if (X) {
@@ -112,11 +119,11 @@ loopTime() {
         match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
         if (match > 0) {
-          WinActivate, World of Warcraft ahk_exe Wow.exe
+          WinActivate, ahk_class GxWindowClass
           ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
 
           if (X) {
-            WinClose, ahk_exe Wow.exe
+            WinClose, ahk_class GxWindowClass
             Sleep, 2000
             WinActivate, ahk_exe Battle.net.exe
             Sleep, 2000
@@ -128,7 +135,6 @@ loopTime() {
       }
 
       Gdip_DisposeImage(haystackBitmap) ; remove haystack image from memory
-      Gdip_Shutdown(pToken) ; remove token
     }
     else { ; else bring Battle.net client to front and start game
       WinActivate, ahk_exe Battle.net.exe
@@ -144,7 +150,9 @@ loopTime() {
       }
       Reload
     }
-    Sleep 1000
+    
+
+    Sleep 1000  
   }
 }
 
@@ -174,13 +182,23 @@ jumpTimer:
     */
   }
   else {
-    ControlSend, , {Space}, ahk_exe Wow.exe
+    ControlSend, , {Space}, ahk_class GxWindowClass
   }
 
   Random, rand, 9, 24 ; new afk timer random wait time in minutes
   rand := rand*60*1000 ; convert minutes to milliseconds
   SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
+
+
+/*
+* Exit function to shutdown GDIP and delete it's objects
+*/
+ExitFunc(ExitReason, ExitCode) {
+  Gdip_DisposeImage(needleBitmap)
+  Gdip_DisposeImage(haystackBitmap)
+  Gdip_Shutdown(pToken)
+}
 
 
 
