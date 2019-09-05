@@ -6,15 +6,53 @@ SetMouseDelay, 0
 #Include, Gdip_ImageSearch.ahk
 #InstallKeybdHook
 #InstallMouseHook
+#SingleInstance
+DetectHiddenWindows, On
 
 wowWindowExists := WinExist("ahk_exe Wow.exe")
 bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
+Process, Exist, Battle.net.exe
+bnetProcess := ErrorLevel
+
+FileRead, bnetPath, path to battle.net.txt
+if (ErrorLevel = 1) {
+  setbatchlines, -1
+  bnetFolder = Battle.net
+  ExeFile = Battle.net.exe
+  FoundFile := 0
+  Loop, Files, C:\*Battle.net, RD
+  { 
+    if A_LoopFileLongPath contains users,windows,microsoft
+      Continue
+
+    Loop, %A_LoopFileLongPath%\*.exe
+    {
+      if (A_LoopFileName = "Battle.net.exe") {
+        foundFile := 1
+        FileAppend , %A_LoopFileFullPath%, path to battle.net.txt, UTF-8
+        Goto, startLabel
+      }
+    }
+  }
+}
+else if (ErrorLevel = 0) {
+  Run, %bnetPath%
+  Goto, bnetLabel
+}
 
 
-if (!bnetWindowExists) { ; if battle.net client is not started
+
+
+startLabel:
+SetBatchLines, 100ms
+
+
+
+if (!bnetProcess) { ; if battle.net client is not started
   MsgBox, Start Battle.net and try again
   ExitApp, "Battle.net not found"
 }
+bnetLabel:
 if (!wowWindowExists) { ; if world of warcraft is not started
   WinActivate, ahk_exe Battle.net.exe
 
@@ -171,3 +209,4 @@ pBitmap(HWID) {
   SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
   return pBitmap
 }
+
