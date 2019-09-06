@@ -225,4 +225,3 @@ pBitmap(HWID) {
   SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
   return pBitmap
 }
-
