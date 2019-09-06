@@ -63,7 +63,7 @@ if (!wowWindowExists) { ; if world of warcraft is not started
 
   Loop images/*.*
   {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
     if (X) {
       MouseClick, left, X, Y, 2
@@ -91,18 +91,15 @@ loopTime() {
       haystackBitmap := pBitmap(wowHWND)
 
 
-      Gdip_saveBitmapToFile(haystackBitmap, "test.png")
-
-
       Loop, images/*.* ; Loop images for dealing with buttons/serverlist
       {
         arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
         needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
-        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
 
         if (match > 0) {
           WinActivate, ahk_class GxWindowClass
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
           if (X) {
             MouseClick, left, X, Y, 2
@@ -116,11 +113,11 @@ loopTime() {
       {
         arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
         needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
-        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
 
         if (match > 0) {
           WinActivate, ahk_class GxWindowClass
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
 
           if (X) {
             WinClose, ahk_class GxWindowClass
@@ -141,7 +138,7 @@ loopTime() {
 
       Loop images/*.* ; loop regular images for dealing with buttons/serverlist
       {
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
         if (X) {
           MouseClick, left, X, Y, 2
