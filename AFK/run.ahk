@@ -22,10 +22,22 @@ bnetProcess := ErrorLevel
 FileRead, bnetPath, battle.net path.txt
 if (ErrorLevel = 1) {
   setbatchlines, -1
-  bnetFolder = Battle.net
-  ExeFile = Battle.net.exe
   FoundFile := 0
   Loop, Files, C:\*Battle.net, RD
+  { 
+    if A_LoopFileLongPath contains users,windows,microsoft
+      Continue
+
+    Loop, %A_LoopFileLongPath%\*.exe
+    {
+      if (A_LoopFileName = "Battle.net.exe") {
+        foundFile := 1
+        FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
+        Goto, startLabel
+      }
+    }
+  }
+  Loop, Files, D:\*Battle.net, RD
   { 
     if A_LoopFileLongPath contains users,windows,microsoft
       Continue
