@@ -1,16 +1,19 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 SetBatchLines, 100ms ; 100ms to ensure a low use of cpu
 SetMouseDelay, 0
-#include, Gdip_All.ahk
-#Include, Gdip_ImageSearch.ahk
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#include %A_ScriptDir%\Gdip_all.ahk
+#Include %A_ScriptDir%\Gdip_ImageSearch.ahk
+
 #InstallKeybdHook
 #InstallMouseHook
 DetectHiddenWindows, On
 OnExit("ExitFunc")
 
+SplitPath, A_ScriptDir, , OutDir
 
+SetWorkingDir, %OutDir%
 
 pToken := Gdip_Startup() ; get gdip token to utilize library
 wowWindowExists := WinExist("ahk_class GxWindowClass")
@@ -82,6 +85,7 @@ if (!wowWindowExists) { ; if world of warcraft is not started
       break
     }
   }
+  Sleep 500
   Reload
 } else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
   ControlSend, , {Space}, ahk_class GxWindowClass
