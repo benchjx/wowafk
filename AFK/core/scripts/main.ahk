@@ -85,7 +85,7 @@ if (!wowWindowExists) { ; if world of warcraft is not started
       break
     }
   }
-  Sleep 2000
+  Sleep 2000 ; sleep 2 sec to avoid spamming play button on bnet client
   Reload
 } else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
   ControlSend, , {Space}, ahk_class GxWindowClass
@@ -119,7 +119,7 @@ loopTime() {
 
           if (X) {
             ; if iamge is enter world, sleep 2sec
-            ; this allows addons to load and if the intent was to change character
+            ; allows for addons to load and if the intent was to change character
             if (InStr(A_LoopFileName, "enter world")) { 
               Sleep 2000
             }
