@@ -153,8 +153,8 @@ loopTime()
 * Timer label
 */
 jumpTimer:
+  ; get active windows name
   WinGetTitle, activeWindow, A
-
 
   ; If mouse/keeyboard idle time is less than 5 seconds AND WoW is active then dont do anything
   if (activeWindow = "World of Warcraft" && A_TimeIdle < 5000) {
