@@ -20,19 +20,10 @@ bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 
-getBnetExePath()
+Goto, getBnetExePath()
 
 startLabel:
 SetBatchLines, 300ms
-
-
-
-; if battle.net client is not started
-if (!bnetProcess) { 
-  MsgBox, Start Battle.net and try again
-  ExitApp, "Battle.net not found"
-}
-
 
 bnetLabel:
 
@@ -264,7 +255,8 @@ getBnetExePath() {
         {
           if (A_LoopFileName = "Battle.net.exe") {
             FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
-            Goto, startLabel
+            return startLabel
+            ;Goto, startLabel
           }
         }
       }
@@ -272,6 +264,7 @@ getBnetExePath() {
   }
   else if (ErrorLevel = 0 && !wowWindowExists) {
     Run, %bnetPath%
-    Goto, bnetLabel
+    return bnetLabel
+    ;Goto, bnetLabel
   }
 }
