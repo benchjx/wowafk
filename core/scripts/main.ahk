@@ -20,12 +20,14 @@ bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 
-Goto, getBnetExePath()
-
-startLabel:
+bnetPath := getBnetPath()
 SetBatchLines, 300ms
 
-bnetLabel:
+if (!bnetProcess) {
+  Run, %bnetPath%
+  Sleep 2000
+  Reload
+}
 
 ; if world of warcraft is not started
 if (!wowWindowExists) {
@@ -231,7 +233,7 @@ findBnetPlayButton() {
 }
 
 
-getBnetExePath() {
+getBnetPath() {
   FileRead, bnetPath, battle.net path.txt
 
   ; file with path is empty or doesnt exist
@@ -255,16 +257,13 @@ getBnetExePath() {
         {
           if (A_LoopFileName = "Battle.net.exe") {
             FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
-            return startLabel
-            ;Goto, startLabel
+            return %A_LoopFileFullPath%
           }
         }
       }
     }
   }
-  else if (ErrorLevel = 0 && !wowWindowExists) {
-    Run, %bnetPath%
-    return bnetLabel
-    ;Goto, bnetLabel
+  else {
+    return %bnetPath%
   }
 }
