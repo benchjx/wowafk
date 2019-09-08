@@ -52,27 +52,17 @@ loopTime() {
     ; If WoW window exists go ahead with main function
     if (WinExist("ahk_class GxWindowClass")) { 
       ; only imagesearch if no activity for last 5 seconds
-      if (A_TimeIdle > 5000) { 
-        ; get WoW window HWID
-        WinGet, wowHWND, ID, ahk_class GxWindowClass 
-        ; create haystack bitmap from hwnd
-        haystackBitmap := pBitmap(wowHWND)
+      if (A_TimeIdle > 5000) {
 
+        ; get active window name
+        WinGetTitle, activeWindow, A
+        
+        if (activeWindow = "World of Warcraft") {
 
-        ; Loop images for dealing with buttons/serverlist
-        Loop, images/*.* 
-        {
-          ; empty var for Gdip_ImageSearch to fill with cooridnates
-          arr := "" 
-          ; create needle bitmap from image
-          needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
-          ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
-
-          if (match > 0) {
-            ; activate wow window
-            WinActivate, ahk_class GxWindowClass
-            ; perform regular imagesearch for same picture as needle
+          ; Loop images for dealing with buttons/serverlist
+          Loop, images/*.* 
+          {
+            ; imagesearch for same picture as needle
             ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
             if (X) {
@@ -85,24 +75,10 @@ loopTime() {
             }
           }
 
-          ; remove needle image from memory
-          Gdip_DisposeImage(needleBitmap) 
-        }
-
-        ; Loop images indicating a disconnect occured
-        Loop, images/dc/*.* 
-        {
-          ; empty var for Gdip_ImageSearch to fill with cooridnates
-          arr := "" 
-          ; create needle bitmap from image
-          needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
-          ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
-
-          if (match > 0) {
-            ; activate wow window
-            WinActivate, ahk_class GxWindowClass
-            ; perform regular imagesearch for same picture as needle
+          ; Loop images indicating a disconnect occured
+          Loop, images/dc/*.* 
+          {
+            ; imagesearch for same picture as needle
             ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
 
             ; if match then some kind of disconnect occured
@@ -117,14 +93,83 @@ loopTime() {
               Reload
             }
           }
+        }
+        else {
+          ; get WoW window HWID
+          WinGet, wowHWND, ID, ahk_class GxWindowClass 
+          ; create haystack bitmap from hwnd
+          haystackBitmap := pBitmap(wowHWND)
 
-          ; remove needle image from memory
-          Gdip_DisposeImage(needleBitmap) 
+
+          ; Loop images for dealing with buttons/serverlist
+          Loop, images/*.* 
+          {
+            ; empty var for Gdip_ImageSearch to fill with cooridnates
+            arr := "" 
+            ; create needle bitmap from image
+            needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
+            ; imagesearch haystack with needle, save match number in var
+            match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+
+            if (match > 0) {
+              ; activate wow window
+              WinActivate, ahk_class GxWindowClass
+              ; perform regular imagesearch for same picture as needle
+              ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+
+              if (X) {
+                ; if iamge is enter world, sleep 2sec
+                ; allows for addons to load and if the intent was to change character
+                if (InStr(A_LoopFileName, "enter world")) { 
+                  Sleep 2000
+                }
+                MouseClick, left, X, Y, 2
+              }
+            }
+
+            ; remove needle image from memory
+            Gdip_DisposeImage(needleBitmap) 
+          }
+
+          ; Loop images indicating a disconnect occured
+          Loop, images/dc/*.* 
+          {
+            ; empty var for Gdip_ImageSearch to fill with cooridnates
+            arr := "" 
+            ; create needle bitmap from image
+            needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
+            ; imagesearch haystack with needle, save match number in var
+            match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+
+            if (match > 0) {
+              ; activate wow window
+              WinActivate, ahk_class GxWindowClass
+              ; perform regular imagesearch for same picture as needle
+              ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
+
+              ; if match then some kind of disconnect occured
+              if (X) {
+                ; close wow window
+                WinClose, ahk_class GxWindowClass
+                Sleep, 2000
+                ; activate battle.net client
+                WinActivate, ahk_exe Battle.net.exe
+                Sleep, 3000
+                ; reload script (easier than writing additional logic)
+                Reload
+              }
+            }
+
+            ; remove needle image from memory
+            Gdip_DisposeImage(needleBitmap) 
+          }
+
+          ; remove haystack image from memory
+          Gdip_DisposeImage(haystackBitmap) 
         }
 
-        ; remove haystack image from memory
-        Gdip_DisposeImage(haystackBitmap) 
       }
+
     }
     ; if no WoW window exists
     else { 
