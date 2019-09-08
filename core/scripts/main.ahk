@@ -101,64 +101,93 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 loopTime() {
   Sleep 2000
   Loop
-  {
-    if (WinExist("ahk_class GxWindowClass")) { ; If WoW window exists go ahead with main function
-      WinGet, wowHWND, ID, ahk_class GxWindowClass ; get WoW window HWID
-      haystackBitmap := pBitmap(wowHWND)
+  { 
+    ; If WoW window exists go ahead with main function
+    if (WinExist("ahk_class GxWindowClass")) { 
+      ; only imagesearch if no activity for last 5 seconds
+      if (A_TimeIdle > 5000) { 
+        ; get WoW window HWID
+        WinGet, wowHWND, ID, ahk_class GxWindowClass 
+        ; create haystack bitmap from hwnd
+        haystackBitmap := pBitmap(wowHWND)
 
 
-      Loop, images/*.* ; Loop images for dealing with buttons/serverlist
-      {
-        arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
-        needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
-        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+        ; Loop images for dealing with buttons/serverlist
+        Loop, images/*.* 
+        {
+          ; empty var for Gdip_ImageSearch to fill with cooridnates
+          arr := "" 
+          ; create needle bitmap from image
+          needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
+          ; imagesearch haystack with needle, save match number in var
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
 
-        if (match > 0) {
-          WinActivate, ahk_class GxWindowClass
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+          if (match > 0) {
+            ; activate wow window
+            WinActivate, ahk_class GxWindowClass
+            ; perform regular imagesearch for same picture as needle
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
-          if (X) {
-            ; if iamge is enter world, sleep 2sec
-            ; allows for addons to load and if the intent was to change character
-            if (InStr(A_LoopFileName, "enter world")) { 
-              Sleep 2000
+            if (X) {
+              ; if iamge is enter world, sleep 2sec
+              ; allows for addons to load and if the intent was to change character
+              if (InStr(A_LoopFileName, "enter world")) { 
+                Sleep 2000
+              }
+              MouseClick, left, X, Y, 2
             }
-            MouseClick, left, X, Y, 2
           }
+
+          ; remove needle image from memory
+          Gdip_DisposeImage(needleBitmap) 
         }
 
-        Gdip_DisposeImage(needleBitmap) ; remove needle image from memory
-      }
+        ; Loop images indicating a disconnect occured
+        Loop, images/dc/*.* 
+        {
+          ; empty var for Gdip_ImageSearch to fill with cooridnates
+          arr := "" 
+          ; create needle bitmap from image
+          needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
+          ; imagesearch haystack with needle, save match number in var
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
 
-      Loop, images/dc/*.* ; Loop images indicating a disconnect occured
-      {
-        arr := "" ; empty var for Gdip_ImageSearch to fill with cooridnates
-        needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
-        match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+          if (match > 0) {
+            ; activate wow window
+            WinActivate, ahk_class GxWindowClass
+            ; perform regular imagesearch for same picture as needle
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
 
-        if (match > 0) {
-          WinActivate, ahk_class GxWindowClass
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
-
-          if (X) {
-            WinClose, ahk_class GxWindowClass
-            Sleep, 2000
-            WinActivate, ahk_exe Battle.net.exe
-            Sleep, 2000
-            Reload
+            ; if match then some kind of disconnect occured
+            if (X) {
+              ; close wow window
+              WinClose, ahk_class GxWindowClass
+              Sleep, 2000
+              ; activate battle.net client
+              WinActivate, ahk_exe Battle.net.exe
+              Sleep, 2000
+              ; reload script (easier than to write additional logic)
+              Reload
+            }
           }
+
+          ; remove needle image from memory
+          Gdip_DisposeImage(needleBitmap) 
         }
 
-        Gdip_DisposeImage(needleBitmap) ; remove needle image from memory
+        ; remove haystack image from memory
+        Gdip_DisposeImage(haystackBitmap) 
       }
-
-      Gdip_DisposeImage(haystackBitmap) ; remove haystack image from memory
     }
-    else { ; else bring Battle.net client to front and start game
+    ; if no WoW window exists
+    else { 
+      ; bring Battle.net client to front and start game
       WinActivate, ahk_exe Battle.net.exe
 
-      Loop images/*.* ; loop regular images for dealing with buttons/serverlist
+      ; loop regular images for dealing with buttons/serverlist
+      Loop images/*.* 
       {
+        ; search for play button
         ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
         if (X) {
@@ -166,6 +195,7 @@ loopTime() {
           break
         }
       }
+      ; reload script (easier than to write additional logic)
       Reload
     }
     
@@ -194,10 +224,9 @@ jumpTimer:
   WinGetTitle, activeWindow, A
 
 
+  ; If mouse/keeyboard idle time is less than 5 seconds AND WoW is active then dont do anything
   if (activeWindow = "World of Warcraft" && A_TimeIdle < 5000) {
-    /*
-    * If mouse/keeyboard idle time is less than 5 seconds AND WoW is active then dont do anything
-    */
+
   }
   else {
     ControlSend, , {Space}, ahk_class GxWindowClass
@@ -213,8 +242,10 @@ Return
 * Exit function to shutdown GDIP and delete it's objects
 */
 ExitFunc(ExitReason, ExitCode) {
+  ; dispose of bitmaps
   Gdip_DisposeImage(needleBitmap)
   Gdip_DisposeImage(haystackBitmap)
+  ; shutdown dll token
   Gdip_Shutdown(pToken)
 }
 
