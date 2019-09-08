@@ -118,6 +118,11 @@ loopTime() {
           ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
           if (X) {
+            ; if iamge is enter world, sleep 2sec
+            ; this allows addons to load and if the intent was to change character
+            if (InStr(A_LoopFileName, "enter world")) { 
+              Sleep 2000
+            }
             MouseClick, left, X, Y, 2
           }
         }
