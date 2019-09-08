@@ -4,8 +4,8 @@ AFK macro for World of Warcraft classic
 
 ### Currently supportred resolutions
 
-1440p
-1080p
+*1440p
+*1080p
 
 
 ## Usage
