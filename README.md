@@ -30,8 +30,8 @@ If a disconnect occurs the script will relaunch World of Warcraft and press Gehe
 
 | Hotkey         | Function          |
 | -------------- | ----------------- |
-| **Page down:** | Restart the macro |
-| **Pause:**     | Pauses the macro  |
+| **Page down** | Restart the macro |
+| **Pause**     | Pauses the macro  |
 
 
 **Page down:** Restart the macro
