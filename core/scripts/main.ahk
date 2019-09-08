@@ -16,7 +16,6 @@ SetWorkingDir, %OutDir%
 
 pToken := Gdip_Startup() ; get gdip token to utilize library
 wowWindowExists := WinExist("ahk_class GxWindowClass")
-bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 
@@ -259,7 +258,8 @@ pBitmap(HWID) {
 
 findBnetPlayButton() {
   ; activate battle.net client
-  WinActivate, ahk_exe Battle.net.exe
+  bnetPath := getBnetPath()
+  Run, %bnetPath%
 
   ; loop images to find play button
   Loop images/*.*
