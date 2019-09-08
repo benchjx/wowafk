@@ -6,8 +6,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 Progress, 0 , Setting variables, Updating, Updating
 
 SplitPath, A_ScriptDir, ,coreDir
-SplitPath, coreDir, ,afkDir
-SplitPath, afkDir, ,wowafkDir
+SplitPath, coreDir, ,wowafkDir
 SplitPath, wowafkDir, wowafkFolderName,wowafkParent
 
 SetWorkingDir, %wowafkParent%
