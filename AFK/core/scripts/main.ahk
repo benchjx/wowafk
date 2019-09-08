@@ -85,7 +85,7 @@ if (!wowWindowExists) { ; if world of warcraft is not started
       break
     }
   }
-  Sleep 500
+  Sleep 2000
   Reload
 } else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
   ControlSend, , {Space}, ahk_class GxWindowClass
