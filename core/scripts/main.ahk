@@ -12,7 +12,6 @@ DetectHiddenWindows, On
 OnExit("ExitFunc")
 
 SplitPath, A_ScriptDir, , OutDir
-
 SetWorkingDir, %OutDir%
 
 pToken := Gdip_Startup() ; get gdip token to utilize library
@@ -21,73 +20,28 @@ bnetWindowExists :=  WinExist("ahk_exe Battle.net.exe")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 
-
-FileRead, bnetPath, battle.net path.txt
-if (ErrorLevel = 1) {
-  setbatchlines, -1
-  FoundFile := 0
-  Loop, Files, C:\*Battle.net, RD
-  { 
-    if A_LoopFileLongPath contains users,windows,microsoft
-      Continue
-
-    Loop, %A_LoopFileLongPath%\*.exe
-    {
-      if (A_LoopFileName = "Battle.net.exe") {
-        foundFile := 1
-        FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
-        Goto, startLabel
-      }
-    }
-  }
-  Loop, Files, D:\*Battle.net, RD
-  { 
-    if A_LoopFileLongPath contains users,windows,microsoft
-      Continue
-
-    Loop, %A_LoopFileLongPath%\*.exe
-    {
-      if (A_LoopFileName = "Battle.net.exe") {
-        foundFile := 1
-        FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
-        Goto, startLabel
-      }
-    }
-  }
-}
-else if (ErrorLevel = 0 && !wowWindowExists) {
-  Run, %bnetPath%
-  Goto, bnetLabel
-}
-
-
-
+getBnetExePath()
 
 startLabel:
 SetBatchLines, 300ms
 
 
 
-if (!bnetProcess) { ; if battle.net client is not started
+; if battle.net client is not started
+if (!bnetProcess) { 
   MsgBox, Start Battle.net and try again
   ExitApp, "Battle.net not found"
 }
+
+
 bnetLabel:
-if (!wowWindowExists) { ; if world of warcraft is not started
-  WinActivate, ahk_exe Battle.net.exe
 
-  Loop images/*.*
-  {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
-
-    if (X) {
-      MouseClick, left, X, Y, 2
-      break
-    }
-  }
-  Sleep 2000 ; sleep 2 sec to avoid spamming play button on bnet client
-  Reload
-} else { ; world of warcraft exists and we send a space command to it to indicate start of afk macro
+; if world of warcraft is not started
+if (!wowWindowExists) {
+  findBnetPlayButton()
+} 
+; world of warcraft exists and we send a space command to it to indicate start of afk macro
+else { 
   ControlSend, , {Space}, ahk_class GxWindowClass
 }
 
@@ -165,8 +119,8 @@ loopTime() {
               Sleep, 2000
               ; activate battle.net client
               WinActivate, ahk_exe Battle.net.exe
-              Sleep, 2000
-              ; reload script (easier than to write additional logic)
+              Sleep, 3000
+              ; reload script (easier than writing additional logic)
               Reload
             }
           }
@@ -181,22 +135,7 @@ loopTime() {
     }
     ; if no WoW window exists
     else { 
-      ; bring Battle.net client to front and start game
-      WinActivate, ahk_exe Battle.net.exe
-
-      ; loop regular images for dealing with buttons/serverlist
-      Loop images/*.* 
-      {
-        ; search for play button
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
-
-        if (X) {
-          MouseClick, left, X, Y, 2
-          break
-        }
-      }
-      ; reload script (easier than to write additional logic)
-      Reload
+      findBnetPlayButton()
     }
     
 
@@ -276,4 +215,63 @@ pBitmap(HWID) {
   pBitmap := Gdip_CreateBitmapFromHBITMAP(hbm)
   SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
   return pBitmap
+}
+
+
+
+findBnetPlayButton() {
+  ; activate battle.net client
+  WinActivate, ahk_exe Battle.net.exe
+
+  ; loop images to find play button
+  Loop images/*.*
+  {
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+
+    if (X) {
+      MouseClick, left, X, Y, 2
+      break
+    }
+  }
+  ; sleep 3 sec to avoid spamming play button on bnet client
+  Sleep 3000 
+  ; reload script (easier than writing additional logic)
+  Reload
+}
+
+
+getBnetExePath() {
+  FileRead, bnetPath, battle.net path.txt
+
+  ; file with path is empty or doesnt exist
+  if (ErrorLevel = 1) {
+    ; batchlines -1 for speed
+    setbatchlines, -1
+    ; get list of drives on system
+    DriveGet, drives, List
+    ; split string into array of drive letters
+    drives := StrSplit(drives, "")
+    
+    ; loop through drive letters array
+    for i, drive in drives
+    {
+      Loop, Files, %drive%:\*Battle.net, RD
+      {
+        if A_LoopFileLongPath contains users,windows,microsoft
+          Continue
+
+        Loop, %A_LoopFileLongPath%\*.exe
+        {
+          if (A_LoopFileName = "Battle.net.exe") {
+            FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
+            Goto, startLabel
+          }
+        }
+      }
+    }
+  }
+  else if (ErrorLevel = 0 && !wowWindowExists) {
+    Run, %bnetPath%
+    Goto, bnetLabel
+  }
 }
