@@ -9,7 +9,7 @@ SplitPath, coreDir, ,wowafkDir
 SplitPath, wowafkDir, wowafkFolderName,wowafkParent
 
 
-RunWait, %coreDir%\AHK\AutoHotkey.exe %coreDir%\scripts\update.ahk
-Run, %coreDir%\AHK\AutoHotkey.exe %coreDir%\scripts\main.ahk
+RunWait, "%coreDir%\AHK\AutoHotkey.exe" "%coreDir%\scripts\update.ahk"
+Run, "%coreDir%\AHK\AutoHotkey.exe" "%coreDir%\scripts\main.ahk"
 
 Return
