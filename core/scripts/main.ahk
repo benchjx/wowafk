@@ -98,6 +98,11 @@ loopTime() {
           WinGet, wowHWND, ID, ahk_class GxWindowClass 
           ; create haystack bitmap from hwnd
           haystackBitmap := pBitmap(wowHWND)
+          pColor := Gdip_GetPixel(haystackBitmap, 0, 0)
+
+          if (pColor = 0 || pColor = "0") {
+            WinActivate, ahk_class GxWindowClass
+          }
 
 
           ; Loop images for dealing with buttons/serverlist
