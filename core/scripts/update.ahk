@@ -23,10 +23,9 @@ Output_Path := wowafkParent ;the path to extract files
 Progress, 56 , Renaming archived folder, Updating, Updating
 RunWait %comspec% /c %A_ScriptDir%\zip\7za.exe rn "%zipFile%" wowafk-master "%wowafkFolderName%"
 
-Progress, 56 , Niko is RNGesus, Updating, Updating
-Sleep 400
-Progress, 56 , Waiting for Mendy to slay some scrubs, Updating, Updating
-Sleep 600
+; joke progress
+Progress, 56 , Uninstalling addons, Updating, Updating 
+Sleep 800
 
 Progress, 70 , Extracting archive, Updating, Updating
 RunWait %comspec% /c %A_ScriptDir%\zip\7za.exe x -aoa "%zipFile%" -o"%Output_Path%",,hide
