@@ -16,7 +16,7 @@ If start.exe is run when Battle.net client is missing it will loop through drive
 
 Macro will start WoW by pressing blue play button on Battle.net client if WoW is not already running.
 
-Once started it will keep your character in game by jumping once every 10-20 minutes or so and reconnect you if you happen to be desconnected.
+Once started it will keep your character in game by jumping once every 10-20 minutes or so and reconnect you if you happen to be disconnected.
 
 
 ## Hotkeys
