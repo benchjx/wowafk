@@ -21,7 +21,7 @@ Once started it will keep your character in game by jumping once every 10-20 min
 
 ## Hotkeys
 
-| Hotkey         | Function          |
-| -------------- | ----------------- |
-| **Page down**  | Restart the macro |
-| **Pause**      | Pauses the macro  |
+| Hotkey         | Function |
+| -------------- | -------- |
+| **Page down**  | Restart  |
+| **Pause**      | Pause    |
