@@ -60,7 +60,7 @@ loopTime() {
         Loop, images/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *5 images/%A_LoopFileFullPath%
 
           if (X) {
             ; if iamge is enter world, sleep 2sec
@@ -76,7 +76,7 @@ loopTime() {
         Loop, images/dc/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *5 images/dc/%A_LoopFileFullPath%
 
           ; if match then some kind of disconnect occured
           if (X) {
@@ -117,7 +117,7 @@ loopTime() {
             ; activate wow window
             WinActivate, ahk_class GxWindowClass
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *5 images/%A_LoopFileFullPath%
 
             if (X) {
               ; if iamge is enter world, sleep 2sec
@@ -147,7 +147,7 @@ loopTime() {
             ; activate wow window
             WinActivate, ahk_class GxWindowClass
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *5 images/dc/%A_LoopFileFullPath%
 
             ; if match then some kind of disconnect occured
             if (X) {
