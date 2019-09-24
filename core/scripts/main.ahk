@@ -15,9 +15,11 @@ SplitPath, A_ScriptDir, , OutDir
 SetWorkingDir, %OutDir%
 
 pToken := Gdip_Startup() ; get gdip token to utilize library
-wowWindowExists := WinExist("ahk_class GxWindowClass")
+;wowWindowExists := WinExist("ahk_class GxWindowClass")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
+Process, Exist, Wow.exe
+wowProcess := ErrorLevel
 
 bnetPath := getBnetPath()
 SetBatchLines, 300ms
@@ -29,7 +31,7 @@ if (!bnetProcess) {
 }
 
 ; if world of warcraft is not started
-if (!wowWindowExists) {
+if (!wowProcess) {
   findBnetPlayButton()
 }
 ; world of warcraft exists and we send a space command to it to indicate start of afk macro
