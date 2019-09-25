@@ -1,3 +1,5 @@
+## Currently only supports logging back into Gehennas when dc'ed
+
 # wowafk
 
 AFK macro for World of Warcraft classic
