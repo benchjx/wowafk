@@ -1,6 +1,6 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance
-SetBatchLines, 100ms ; 100ms to ensure a low use of cpu
+SetBatchLines, 5ms
 SetMouseDelay, 0
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #include %A_ScriptDir%\Gdip_all.ahk
@@ -270,12 +270,15 @@ findBnetPlayButton() {
     ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
     if (X) {
-      MouseClick, left, X, Y, 2
-      break
+      if (InStr(A_LoopFileFullPath, "play")) {
+        MouseClick, left, X, Y, 2
+        Process, Wait, Wow.exe, 30
+        if (ErrorLevel = 0) {
+          Reload
+        }
+      }
     }
   }
-  ; sleep 3 sec to avoid spamming play button on bnet client
-  Sleep 3000
   ; reload script (easier than writing additional logic)
   Reload
 }
