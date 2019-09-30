@@ -273,9 +273,7 @@ findBnetPlayButton() {
       if (InStr(A_LoopFileFullPath, "play")) {
         MouseClick, left, X, Y, 2
         Process, Wait, Wow.exe, 30
-        if (ErrorLevel = 0) {
-          Reload
-        }
+        Reload
       }
     }
   }
