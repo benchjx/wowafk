@@ -208,6 +208,8 @@ jumpTimer:
 
   }
   else {
+    Random, shortRand,1, 1000
+    Sleep, %shortRand%
     ControlSend, , {Space}, World of Warcraft
   }
 
