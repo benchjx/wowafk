@@ -36,7 +36,7 @@ if (!wowProcess) {
 }
 ; world of warcraft exists and we send a space command to it to indicate start of afk macro
 else {
-  ControlSend, , {Space}, ahk_class GxWindowClass
+  ControlSend, , {Space}, World of Warcraft
 }
 
 Random, rand, 9, 24 ; afk timer random wait time in minutes
@@ -208,7 +208,7 @@ jumpTimer:
 
   }
   else {
-    ControlSend, , {Space}, ahk_class GxWindowClass
+    ControlSend, , {Space}, World of Warcraft
   }
 
   Random, rand, 9, 24 ; new afk timer random wait time in minutes
