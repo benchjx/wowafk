@@ -8,7 +8,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #InstallKeybdHook
 #InstallMouseHook
-DetectHiddenWindows, On
 OnExit("ExitFunc")
 
 SplitPath, A_ScriptDir, , OutDir
@@ -19,7 +18,9 @@ pToken := Gdip_Startup() ; get gdip token to utilize library
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 Process, Exist, Wow.exe
-wowProcess := ErrorLevel
+global wowProcess := ErrorLevel
+
+WinActivate, ahk_pid %wowProcess%
 
 bnetPath := getBnetPath()
 SetBatchLines, 300ms
@@ -275,6 +276,7 @@ findBnetPlayButton() {
       if (InStr(A_LoopFileFullPath, "play")) {
         MouseClick, left, X, Y, 2
         Process, Wait, Wow.exe, 30
+        global wowProcess := ErrorLevel
         Reload
       }
     }
