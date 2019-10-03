@@ -20,7 +20,6 @@ bnetProcess := ErrorLevel
 Process, Exist, Wow.exe
 global wowProcess := ErrorLevel
 
-WinActivate, ahk_pid %wowProcess%
 
 bnetPath := getBnetPath()
 SetBatchLines, 300ms
