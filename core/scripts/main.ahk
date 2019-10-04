@@ -1,6 +1,6 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance
-SetBatchLines, 5ms
+SetBatchLines, -1
 SetMouseDelay, 0
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #include %A_ScriptDir%\Gdip_all.ahk
@@ -24,7 +24,6 @@ global wowProcess := ErrorLevel
 WinActivate, ahk_pid %wowProcess%
 
 bnetPath := getBnetPath()
-SetBatchLines, 300ms
 
 if (!bnetProcess) {
   Run, %bnetPath%
@@ -49,6 +48,7 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 * Main loop function
 */
 loopTime() {
+  SetBatchLines, 30ms
   Sleep 2000
   Loop
   {
@@ -269,17 +269,15 @@ findBnetPlayButton() {
   Run, %bnetPath%
 
   ; loop images to find play button
-  Loop images/*.*
+  Loop images/*play*.*
   {
     ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
     if (X) {
-      if (InStr(A_LoopFileFullPath, "play")) {
-        MouseClick, left, X, Y, 2
-        Process, Wait, Wow.exe, 30
-        global wowProcess := ErrorLevel
-        Reload
-      }
+      MouseClick, left, X, Y, 2
+      Process, Wait, Wow.exe, 30
+      global wowProcess := ErrorLevel
+      Reload
     }
   }
   ; reload script (easier than writing additional logic)
@@ -328,10 +326,9 @@ getBnetPath() {
 ClipChanged() {
 	clip := Clipboard
 	if (RegExMatch(Clipboard, "/script DEFAULT_CHAT_FRAME:AddMessage") > 0 ) {
-      WinActivate, World of Warcraft ahk_exe Wow.exe
-			KeyWait, w
-			SendInput,{enter}
-			SendInput, %clip%{enter}
-			;Send, {enter}
+    WinActivate, World of Warcraft ahk_exe Wow.exe
+    KeyWait, w
+    SendInput,{enter}
+    SendInput, %clip%{enter}
 	}
 }
