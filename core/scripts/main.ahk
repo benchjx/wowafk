@@ -326,9 +326,9 @@ getBnetPath() {
 
 ; Clipboard paste
 ClipChanged() {
-	WinActivate, World of Warcraft ahk_exe Wow.exe
 	clip := Clipboard
 	if (RegExMatch(Clipboard, "/script DEFAULT_CHAT_FRAME:AddMessage") > 0 ) {
+      WinActivate, World of Warcraft ahk_exe Wow.exe
 			KeyWait, w
 			SendInput,{enter}
 			SendInput, %clip%{enter}
