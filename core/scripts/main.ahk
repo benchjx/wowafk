@@ -277,6 +277,7 @@ findBnetPlayButton() {
       MouseClick, left, X, Y, 2
       Process, Wait, Wow.exe, 30
       global wowProcess := ErrorLevel
+      Sleep 1000
       Reload
     }
   }
