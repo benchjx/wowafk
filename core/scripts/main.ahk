@@ -9,6 +9,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #InstallKeybdHook
 #InstallMouseHook
 OnExit("ExitFunc")
+onClipBoardChange("ClipChanged")
 
 SplitPath, A_ScriptDir, , OutDir
 SetWorkingDir, %OutDir%
@@ -20,6 +21,7 @@ bnetProcess := ErrorLevel
 Process, Exist, Wow.exe
 global wowProcess := ErrorLevel
 
+WinActivate, ahk_pid %wowProcess%
 
 bnetPath := getBnetPath()
 SetBatchLines, 300ms
@@ -62,7 +64,7 @@ loopTime() {
         Loop, images/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
           if (X) {
             ; if iamge is enter world, sleep 2sec
@@ -78,7 +80,7 @@ loopTime() {
         Loop, images/dc/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
 
           ; if match then some kind of disconnect occured
           if (X) {
@@ -113,13 +115,13 @@ loopTime() {
           ; create needle bitmap from image
           needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
           ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
           if (match > 0) {
             ; activate wow window
             WinActivate, ahk_class GxWindowClass
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
             if (X) {
               ; if iamge is enter world, sleep 2sec
@@ -143,13 +145,13 @@ loopTime() {
           ; create needle bitmap from image
           needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
           ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 15)
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
 
           if (match > 0) {
             ; activate wow window
             WinActivate, ahk_class GxWindowClass
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/dc/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
 
             ; if match then some kind of disconnect occured
             if (X) {
@@ -318,4 +320,18 @@ getBnetPath() {
   else {
     return %bnetPath%
   }
+}
+
+
+
+; Clipboard paste
+ClipChanged() {
+	WinActivate, World of Warcraft ahk_exe Wow.exe
+	clip := Clipboard
+	if (RegExMatch(Clipboard, "/script DEFAULT_CHAT_FRAME:AddMessage") > 0 ) {
+			KeyWait, w
+			SendInput,{enter}
+			SendInput, %clip%{enter}
+			;Send, {enter}
+	}
 }
