@@ -48,7 +48,7 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 * Main loop function
 */
 loopTime() {
-  SetBatchLines, 30ms
+  SetBatchLines, 10
   Sleep 2000
   Loop
   {
