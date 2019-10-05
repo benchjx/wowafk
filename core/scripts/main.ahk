@@ -274,7 +274,7 @@ findBnetPlayButton() {
     ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
     if (X) {
-      MouseClick, left, X, Y, 2
+      MouseClick, left, X, Y
       Process, Wait, Wow.exe, 30
       global wowProcess := ErrorLevel
       Sleep 1000
