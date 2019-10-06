@@ -274,11 +274,11 @@ findBnetPlayButton() {
     ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
 
     if (X) {
-      MouseClick, left, X, Y
+      MouseClick, left, X, Y, 1
       Process, Wait, Wow.exe, 30
       global wowProcess := ErrorLevel
-      Sleep 1000
-      Reload
+      WinWaitActive, World of Warcraft ahk_exe Wow.exe
+      break
     }
   }
   ; reload script (easier than writing additional logic)
