@@ -277,7 +277,17 @@ findBnetPlayButton() {
       MouseClick, left, X, Y, 1
       Process, Wait, Wow.exe, 30
       global wowProcess := ErrorLevel
-      WinWaitActive, World of Warcraft ahk_exe Wow.exe
+
+      while (true) {
+        WinActivate, World of Warcraft ahk_exe Wow.exe
+
+        WinGetTitle, activeWindow, A
+        if (activeWindow = "World of Warcraft") {
+          break
+        }
+
+      }
+      
       break
     }
   }
