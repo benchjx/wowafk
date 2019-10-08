@@ -216,6 +216,8 @@ jumpTimer:
   }
 
   Random, rand, 9, 24 ; new afk timer random wait time in minutes
+  rand := rand*60*1000 ; convert minutes to milliseconds
+  SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
 
 
