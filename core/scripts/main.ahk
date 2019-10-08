@@ -21,6 +21,7 @@ bnetProcess := ErrorLevel
 Process, Exist, Wow.exe
 global wowProcess := ErrorLevel
 
+EmptyMem()
 
 bnetPath := getBnetPath()
 
@@ -47,7 +48,7 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 * Main loop function
 */
 loopTime() {
-  SetBatchLines, 10ms
+  SetBatchLines, 5ms
   Sleep 2000
   Loop
   {
@@ -215,8 +216,6 @@ jumpTimer:
   }
 
   Random, rand, 9, 24 ; new afk timer random wait time in minutes
-  rand := rand*60*1000 ; convert minutes to milliseconds
-  SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
 
 
@@ -341,4 +340,13 @@ ClipChanged() {
     SendInput,{enter}
     SendInput, %clip%{enter}
 	}
+}
+
+
+
+EmptyMem(PID="AHK Rocks"){
+    pid:=(pid="AHK Rocks") ? DllCall("GetCurrentProcessId") : pid
+    h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
+    DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
+    DllCall("CloseHandle", "Int", h)
 }
