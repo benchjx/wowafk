@@ -269,9 +269,9 @@ findBnetPlayButton() {
   Run, %bnetPath%
 
   ; loop images to find play button
-  Loop images/*play*.*
+  Loop images/bnet/*play*.*
   {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/%A_LoopFileFullPath%
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/bnet/%A_LoopFileFullPath%
 
     if (X) {
       MouseClick, left, X, Y, 1
