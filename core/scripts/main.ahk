@@ -283,6 +283,38 @@ findBnetPlayButton() {
   bnetPath := getBnetPath()
   Run, %bnetPath%
 
+
+  Loop images/bnet/games*.*
+  {
+    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 images/bnet/%A_LoopFileFullPath%
+    if (X) {
+      MouseClick, left, X, Y, 1
+      X := 0
+    }
+  }
+
+  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 image/bnet/wowicon.png
+  if (X) {
+    MouseClick, left, X, Y, 1
+    X := 0
+  }
+
+
+  
+  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 image/bnet/retail.png
+  if (X) {
+    MouseClick, left, X, Y, 1
+    X := 0
+  }
+
+  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *15 image/bnet/classic.png
+  if (X) {
+    MouseClick, left, X, Y, 1
+    X := 0
+  }
+
+
+
   ; loop images to find play button
   Loop images/bnet/*play*.*
   {
