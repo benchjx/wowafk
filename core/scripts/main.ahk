@@ -197,6 +197,19 @@ loopTime()
 ~PgDn::Reload
 ~Pause::Pause
 
+!F4::
+  WinGetTitle, activeWindow, A
+  if (activeWindow = "World of Warcraft") {
+    MsgBox, 4, Close macro?
+    IfMsgBox Yes
+      ExitApp, User confirmed exit after alt-F4
+
+  }
+  else {
+    SendInput, !{F4}
+  }
+Return
+
 
 /*
 * Timer label
