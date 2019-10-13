@@ -200,20 +200,24 @@ loopTime()
 !F4::
   WinGetTitle, activeWindow, A
   if (activeWindow = "World of Warcraft") {
-    MsgBox, 4, , Close macro?
-    
+
+    MsgBox, 4,, Close macro?
     IfMsgBox Yes
+    {
       WinActivate, World of Warcraft ahk_exe Wow.exe
       SendInput, !{F4}
       ExitApp, User confirmed exit after alt-F4
-
-    IFMsgBox No
+    }
+    else
+    {
       WinActivate, World of Warcraft ahk_exe Wow.exe
       SendInput, !{F4}
+    }
   }
   else {
     SendInput, !{F4}
   }
+  
 Return
 
 
