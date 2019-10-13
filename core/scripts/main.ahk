@@ -204,6 +204,8 @@ loopTime()
     IfMsgBox Yes
       SendInput, !{F4}
       ExitApp, User confirmed exit after alt-F4
+
+    SendInput, !{F4}
   }
   else {
     SendInput, !{F4}
