@@ -202,10 +202,8 @@ loopTime()
   if (activeWindow = "World of Warcraft") {
     MsgBox, 4, , Close macro?
     IfMsgBox Yes
+      SendInput, !{F4}
       ExitApp, User confirmed exit after alt-F4
-
-    SendInput, !{F4}
-
   }
   else {
     SendInput, !{F4}
