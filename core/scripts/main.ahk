@@ -14,12 +14,15 @@ onClipBoardChange("ClipChanged")
 SplitPath, A_ScriptDir, , OutDir
 SetWorkingDir, %OutDir%
 
+global wowProcess
+
 pToken := Gdip_Startup() ; get gdip token to utilize library
-;wowWindowExists := WinExist("ahk_class GxWindowClass")
+;wowWindowExists := WinExist("ahk_pid %wowProcess%")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
 Process, Exist, Wow.exe
-global wowProcess := ErrorLevel
+wowProcess := ErrorLevel
+
 
 EmptyMem()
 
@@ -53,12 +56,15 @@ loopTime() {
   Loop
   {
     ; If WoW window exists go ahead with main function
-    if (WinExist("ahk_class GxWindowClass")) {
+    if (WinExist("ahk_pid " . wowProcess)) {
 
       ; get active window name
       WinGetTitle, activeWindow, A
+      activeWindowHWND := WinExist("A")
+      WinGet, activeWindowPID, PID, ahk_id %activeWindowHWND%
 
-      if (activeWindow = "World of Warcraft") {
+      if (activeWindowPID = wowProcess) {
+
 
         ; Loop images for dealing with buttons/serverlist
         Loop, images/*.*
@@ -85,7 +91,7 @@ loopTime() {
           ; if match then some kind of disconnect occured
           if (X) {
             ; close wow window
-            WinClose, ahk_class GxWindowClass
+            WinClose, ahk_pid %wowProcess%
             Sleep, 2000
             ; activate battle.net client
             WinActivate, ahk_exe Battle.net.exe
@@ -97,13 +103,13 @@ loopTime() {
       }
       else {
         ; get WoW window HWID
-        WinGet, wowHWND, ID, ahk_class GxWindowClass
+        WinGet, wowHWND, ID, ahk_pid %wowProcess%
         ; create haystack bitmap from hwnd
         haystackBitmap := pBitmap(wowHWND)
         pColor := Gdip_GetPixel(haystackBitmap, 0, 0)
 
         if (pColor = 0 || pColor = "0") {
-          WinActivate, ahk_class GxWindowClass
+          WinActivate, ahk_pid %wowProcess%
         }
 
 
@@ -119,7 +125,7 @@ loopTime() {
 
           if (match > 0) {
             ; activate wow window
-            WinActivate, ahk_class GxWindowClass
+            WinActivate, ahk_pid %wowProcess%
             ; perform regular imagesearch for same picture as needle
             ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
 
@@ -149,14 +155,14 @@ loopTime() {
 
           if (match > 0) {
             ; activate wow window
-            WinActivate, ahk_class GxWindowClass
+            WinActivate, ahk_pid %wowProcess%
             ; perform regular imagesearch for same picture as needle
             ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
 
             ; if match then some kind of disconnect occured
             if (X) {
               ; close wow window
-              WinClose, ahk_class GxWindowClass
+              WinClose, ahk_pid %wowProcess%
               Sleep, 2000
               ; activate battle.net client
               WinActivate, ahk_exe Battle.net.exe
@@ -322,32 +328,57 @@ findBnetPlayButton() {
   }
 
 
-
+  newWowStarted := 0
+  wowArray = []
   ; loop images to find play button
-  Loop images/bnet/*play*.*
-  {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
+  while (!newWowStarted) {
 
-    if (X) {
-      MouseClick, left, X, Y, 1
-      Process, Wait, Wow.exe, 30
-      global wowProcess := ErrorLevel
+    Loop images/bnet/*play*.*
+    {
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
 
-      while (true) {
-        WinActivate, World of Warcraft ahk_exe Wow.exe
+      if (X) {
+        WinGet, wowList, List, World of Warcraft ahk_exe Wow.exe
+        
+        if (wowList = 0) {
+          MouseClick, left, X, Y, 1
+          Process, Wait, Wow.exe, 30
+          global wowProcess := ErrorLevel
 
-        WinGetTitle, activeWindow, A
-        if (activeWindow = "World of Warcraft") {
-          break
+          while (true) {
+            WinActivate, World of Warcraft ahk_exe Wow.exe
+
+            WinGetTitle, activeWindow, A
+            if (activeWindow = "World of Warcraft") {
+              newWowStarted := 1
+              break
+            }
+          }
+        } else {
+          Loop, %wowList%
+          {
+            currentID = wowList%A_Index%
+            wowArray.push(currentID)
+          }
+          joinedArr := Join(","wowArray)
+
+          MouseClick, left, X, Y, 1
+          while (true) {
+            WinGet, wowListTwo, List, World of Warcraft ahk_exe Wow.exe
+            if (wowListTwo != wowList) {
+              for k, v in wowListTwo
+                if v not in %joinedArr%
+                  wowProcess := v
+
+                  
+              newWowStarted := 1
+              break
+            }
+          }
         }
-
       }
-      
-      break
     }
   }
-  ; reload script (easier than writing additional logic)
-  Reload
 }
 
 
@@ -406,4 +437,10 @@ EmptyMem(PID="AHK Rocks"){
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
     DllCall("SetProcessWorkingSetSize", "UInt", h, "Int", -1, "Int", -1)
     DllCall("CloseHandle", "Int", h)
+}
+
+Join(sep, params*) {
+    for index,param in params
+        str .= param . sep
+    return SubStr(str, 1, -StrLen(sep))
 }
