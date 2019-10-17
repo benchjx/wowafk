@@ -50,7 +50,8 @@ Progress, 56 , Uninstalling addons, Updating, Updating
 Sleep 800
 
 Progress, 70 , Extracting archive, Updating, Updating
-FileRemoveDir, %coreDir%, 1
+FileRemoveDir, %coreDir%\images, 1
+FileRemoveDir, %coreDir%\scripts, 1
 RunWait %comspec% /c %A_ScriptDir%\zip\7za.exe x -aoa "%zipFile%" -o"%Output_Path%",,hide
 
 Progress, 84 , Removing Archive, Updating, Updating
