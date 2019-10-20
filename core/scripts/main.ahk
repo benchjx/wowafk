@@ -341,7 +341,10 @@ findBnetPlayButton() {
         WinGet, wowList, List, World of Warcraft ahk_exe Wow.exe
         
         if (wowList = 0) {
+          BlockInput, On
           MouseClick, left, X, Y, 1
+          Sleep 300
+          BlockInput, Off
           Process, Wait, Wow.exe, 30
           global wowProcess := ErrorLevel
 
