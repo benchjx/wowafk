@@ -345,7 +345,8 @@ findBnetPlayButton() {
           Process, Wait, Wow.exe, 30
           global wowProcess := ErrorLevel
 
-          while (true) {
+          Loop, 100
+          {
             WinActivate, World of Warcraft ahk_exe Wow.exe
 
             WinGetTitle, activeWindow, A
@@ -353,6 +354,7 @@ findBnetPlayButton() {
               newWowStarted := 1
               break
             }
+            Sleep 300
           }
         } else {
           Loop, %wowList%
@@ -363,7 +365,10 @@ findBnetPlayButton() {
           joinedArr := Join(","wowArray)
 
           MouseClick, left, X, Y, 1
-          while (true) {
+
+          
+          Loop, 100
+          {
             WinGet, wowListTwo, List, World of Warcraft ahk_exe Wow.exe
             if (wowListTwo != wowList) {
               for k, v in wowListTwo
@@ -374,6 +379,7 @@ findBnetPlayButton() {
               newWowStarted := 1
               break
             }
+            Sleep 300
           }
         }
       }
