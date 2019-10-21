@@ -70,7 +70,7 @@ loopTime() {
         Loop, images/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 *Trans0xFF69B4 images/%A_LoopFileFullPath%
 
           if (X) {
             ; if iamge is enter world, sleep 2sec
@@ -86,7 +86,7 @@ loopTime() {
         Loop, images/dc/*.*
         {
           ; imagesearch for same picture as needle
-          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
+          ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 *Trans0xFF69B4 images/dc/%A_LoopFileFullPath%
 
           ; if match then some kind of disconnect occured
           if (X) {
@@ -121,13 +121,13 @@ loopTime() {
           ; create needle bitmap from image
           needleBitmap := Gdip_CreateBitmapFromFile("images/"A_LoopFileFullPath)
           ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20, 0xFF69B4)
 
           if (match > 0) {
             ; activate wow window
             WinActivate, ahk_pid %wowProcess%
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 *Trans0xFF69B4 images/%A_LoopFileFullPath%
 
             if (X) {
               ; if iamge is enter world, sleep 2sec
@@ -151,13 +151,13 @@ loopTime() {
           ; create needle bitmap from image
           needleBitmap := Gdip_CreateBitmapFromFile("images/dc/"A_LoopFileFullPath)
           ; imagesearch haystack with needle, save match number in var
-          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20)
+          match := Gdip_ImageSearch(haystackBitmap, needleBitmap, arr, , , , , 20, 0xFF69B4)
 
           if (match > 0) {
             ; activate wow window
             WinActivate, ahk_pid %wowProcess%
             ; perform regular imagesearch for same picture as needle
-            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/dc/%A_LoopFileFullPath%
+            ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 *Trans0xFF69B4 images/dc/%A_LoopFileFullPath%
 
             ; if match then some kind of disconnect occured
             if (X) {
@@ -202,6 +202,8 @@ loopTime()
 */
 ~PgDn::Reload
 ~Pause::Pause
+~PgUp::BlockInput, On
+
 
 !F4::
   WinGetTitle, activeWindow, A
