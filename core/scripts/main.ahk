@@ -37,6 +37,7 @@ if (!bnetProcess) {
 ; if world of warcraft is not started
 if (!wowProcess) {
   findBnetPlayButton()
+  Sleep 30
 }
 ; world of warcraft exists and we send a space command to it to indicate start of afk macro
 else {
