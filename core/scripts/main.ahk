@@ -299,6 +299,7 @@ findBnetPlayButton() {
   ; activate battle.net client
   bnetPath := getBnetPath()
   Run, %bnetPath%
+  Sleep 2000
 
 
   Loop images/bnet/games*.*
