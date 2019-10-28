@@ -204,6 +204,14 @@ loopTime()
 ~PgDn::Reload
 ~Pause::Pause
 ~PgUp::BlockInput, On
+~Space::
+  Sleep 1000
+  While (GetKeyState("Space", "P")) {
+    Random, jumpSleep, 78, 154
+    SendInput, {Space}
+    Sleep, %jumpSleep%
+  }
+Return
 
 
 !F4::
@@ -302,40 +310,54 @@ findBnetPlayButton() {
   Sleep 2000
 
 
-  Loop images/bnet/games*.*
-  {
-    ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
-    if (X) {
-      MouseClick, left, X, Y, 1
-      X := 0
-    }
-  }
-
-  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/wowicon.png
-  if (X) {
-    MouseClick, left, X, Y, 1
-    X := 0
-  }
-
-
   
-  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/retail.png
-  if (X) {
-    MouseClick, left, X, Y, 1
-    X := 0
-  }
-
-  ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/classic.png
-  if (X) {
-    MouseClick, left, X, Y, 1
-    X := 0
-  }
 
 
   newWowStarted := 0
   wowArray = []
   ; loop images to find play button
   while (!newWowStarted) {
+
+
+    Loop images/bnet/*.*
+      {
+        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
+        if (X) {
+          MouseClick, left, X, Y, 1
+          X := 0
+        }
+      }
+
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/wowicon.png
+      if (X) {
+        MouseClick, left, X, Y, 1
+        X := 0
+      }
+
+
+      
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/retail.png
+      if (X) {
+        MouseClick, left, X, Y, 1
+        X := 0
+      }
+
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/classic.png
+      if (X) {
+        MouseClick, left, X, Y, 1
+        X := 0
+      }   
+      /*
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/reconnect.png
+      if (X) {
+        MouseClick, left, X, Y, 1
+        X := 0
+      }
+      */
+
+
+    
+
 
     Loop images/bnet/*play*.*
     {
@@ -358,7 +380,7 @@ findBnetPlayButton() {
 
             WinGetTitle, activeWindow, A
             if (activeWindow = "World of Warcraft") {
-              newWowStarted := 1
+              newWowStarted := true
               break
             }
             Sleep 300
