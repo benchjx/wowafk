@@ -310,8 +310,6 @@ findBnetPlayButton() {
   Sleep 2000
 
 
-  
-
 
   newWowStarted := 0
   wowArray = []
@@ -320,45 +318,21 @@ findBnetPlayButton() {
 
 
     Loop images/bnet/*.*
-      {
-        ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
-        if (X) {
-          MouseClick, left, X, Y, 1
-          X := 0
-        }
-      }
-
-      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/wowicon.png
+    {
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
       if (X) {
         MouseClick, left, X, Y, 1
         X := 0
       }
+      Sleep 500
+    }
 
+    WinGet, newWowStarted, World of Warcraft ahk_exe Wow.exe
 
-      
-      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/retail.png
-      if (X) {
-        MouseClick, left, X, Y, 1
-        X := 0
-      }
-
-      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/classic.png
-      if (X) {
-        MouseClick, left, X, Y, 1
-        X := 0
-      }   
-      /*
-      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/reconnect.png
-      if (X) {
-        MouseClick, left, X, Y, 1
-        X := 0
-      }
-      */
-
-
+  }
     
 
-
+  /*
     Loop images/bnet/*play*.*
     {
       ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
@@ -414,6 +388,7 @@ findBnetPlayButton() {
       }
     }
   }
+  */
 }
 
 
