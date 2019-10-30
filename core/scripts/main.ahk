@@ -316,6 +316,7 @@ findBnetPlayButton() {
   ; loop images to find play button
   while (!newWowStarted) {
 
+    Run, %bnetPath%
 
     Loop images/bnet/*.*
     {
