@@ -28,7 +28,7 @@ FileRead, localVersion, %coreDir%\version.txt
 
 
 
-if (CompareFileVersions(remoteVersion, localVersion) >= 0) {
+if (CompareFileVersions(remoteVersion, localVersion) != -1) {
   Goto, progressCompleteLabel
 }
 
@@ -52,6 +52,7 @@ Sleep 800
 Progress, 70 , Extracting archive, Updating, Updating
 FileRemoveDir, %coreDir%\images, 1
 FileRemoveDir, %coreDir%\scripts, 1
+Sleep 500
 RunWait %comspec% /c %A_ScriptDir%\zip\7za.exe x -aoa "%zipFile%" -o"%Output_Path%",,hide
 
 Progress, 84 , Removing Archive, Updating, Updating
