@@ -328,7 +328,7 @@ findBnetPlayButton() {
       Sleep 500
     }
 
-    WinGet, newWow, World of Warcraft ahk_exe Wow.exe
+    WinGet, newWow, PID, World of Warcraft ahk_exe Wow.exe
 
     if (newWow) {
       newWowStarted := 1
