@@ -52,10 +52,9 @@ SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 * Main loop function
 */
 loopTime() {
-  SetBatchLines, 5ms
-  Sleep 2000
   Loop
   {
+    SetBatchLines, 5ms
     ; If WoW window exists go ahead with main function
     if (WinExist("ahk_pid " . wowProcess)) {
 
