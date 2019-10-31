@@ -327,8 +327,10 @@ findBnetPlayButton() {
       }
       Sleep 500
     }
-
   }
+
+  Process, Exist, Wow.exe
+  wowProcess := ErrorLevel
 }
 
 
