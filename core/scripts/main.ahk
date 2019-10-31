@@ -314,7 +314,7 @@ findBnetPlayButton() {
   newWowStarted := 0
   wowArray = []
   ; loop images to find play button
-  while (!newWowStarted) {
+  while (!WinExist("World of Warcraft ahk_exe Wow.exe")) {
 
     Run, %bnetPath%
 
@@ -328,72 +328,7 @@ findBnetPlayButton() {
       Sleep 500
     }
 
-    WinGet, newWow, PID, World of Warcraft ahk_exe Wow.exe
-
-    if (newWow) {
-      newWowStarted := 1
-    }
-
   }
-    
-
-  /*
-    Loop images/bnet/*play*.*
-    {
-      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
-
-      if (X) {
-        WinGet, wowList, List, World of Warcraft ahk_exe Wow.exe
-        
-        if (wowList = 0) {
-          BlockInput, On
-          MouseClick, left, X, Y, 1
-          Sleep 300
-          BlockInput, Off
-          Process, Wait, Wow.exe, 30
-          global wowProcess := ErrorLevel
-
-          Loop, 100
-          {
-            WinActivate, World of Warcraft ahk_exe Wow.exe
-
-            WinGetTitle, activeWindow, A
-            if (activeWindow = "World of Warcraft") {
-              newWowStarted := true
-              break
-            }
-            Sleep 300
-          }
-        } else {
-          Loop, %wowList%
-          {
-            currentID = wowList%A_Index%
-            wowArray.push(currentID)
-          }
-          joinedArr := Join(","wowArray)
-
-          MouseClick, left, X, Y, 1
-
-          
-          Loop, 100
-          {
-            WinGet, wowListTwo, List, World of Warcraft ahk_exe Wow.exe
-            if (wowListTwo != wowList) {
-              for k, v in wowListTwo
-                if v not in %joinedArr%
-                  wowProcess := v
-
-                  
-              newWowStarted := 1
-              break
-            }
-            Sleep 300
-          }
-        }
-      }
-    }
-  }
-  */
 }
 
 
