@@ -206,7 +206,7 @@ loopTime()
 ~Space::
   Sleep 1000
   While (GetKeyState("Space", "P")) {
-    Random, jumpSleep, 78, 154
+    Random, jumpSleep, 78, 121
     SendInput, {Space}
     Sleep, %jumpSleep%
   }
