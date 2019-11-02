@@ -44,7 +44,7 @@ else {
   ControlSend, ahk_parent, {Space}, World of Warcraft ahk_exe Wow.exe
 }
 
-Random, rand, 9, 24 ; afk timer random wait time in minutes
+Random, rand, 9, 17 ; afk timer random wait time in minutes
 rand := rand*60*1000 ; convert minutes to milliseconds
 SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 
@@ -254,7 +254,7 @@ jumpTimer:
     ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
   }
 
-  Random, rand, 9, 24 ; new afk timer random wait time in minutes
+  Random, rand, 9, 17 ; new afk timer random wait time in minutes
   rand := rand*60*1000 ; convert minutes to milliseconds
   SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
