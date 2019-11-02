@@ -203,6 +203,7 @@ loopTime()
 ~PgDn::Reload
 ~Pause::Pause
 ~PgUp::BlockInput, On
+~+PgDn::ExitApp
 ~Space::
   Sleep 1000
   While (GetKeyState("Space", "P")) {
