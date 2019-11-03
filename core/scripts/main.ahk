@@ -318,14 +318,26 @@ findBnetPlayButton() {
 
     Run, %bnetPath%
 
-    Loop images/bnet/*.*
+    bnetLoopLabel:
+    Loop images/bnet/*.PNG
     {
       ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/%A_LoopFileFullPath%
       if (X) {
         MouseClick, left, X, Y, 1
         X := 0
+        Sleep 500
+        Goto, bnetLoopLabel
       }
-      Sleep 500
+    }
+
+    Loop images/bnet/play/*.PNG
+    {
+      ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 images/bnet/play/%A_LoopFileFullPath%
+      if (X) {
+        MouseClick, left, X, Y, 1
+        X := 0
+        Sleep 500
+      }
     }
   }
 
