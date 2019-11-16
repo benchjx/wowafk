@@ -204,8 +204,8 @@ loopTime()
 ~Pause::Pause
 ~PgUp::BlockInput, On
 ~+^PgDn::ExitApp
-~Space::
-  Sleep 1000
+~^Space::
+Sleep 200
   While (GetKeyState("Space", "P")) {
     Random, jumpSleep, 78, 121
     SendInput, {Space}
@@ -336,7 +336,7 @@ findBnetPlayButton() {
       if (X) {
         MouseClick, left, X, Y, 1
         X := 0
-        Sleep 500
+        Sleep 5000
       }
     }
   }
