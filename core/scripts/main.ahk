@@ -20,7 +20,7 @@ pToken := Gdip_Startup() ; get gdip token to utilize library
 ;wowWindowExists := WinExist("ahk_pid %wowProcess%")
 Process, Exist, Battle.net.exe
 bnetProcess := ErrorLevel
-Process, Exist, Wow.exe
+Process, Exist, WowClassic.exe
 wowProcess := ErrorLevel
 
 
@@ -41,7 +41,7 @@ if (!wowProcess) {
 }
 ; world of warcraft exists and we send a space command to it to indicate start of afk macro
 else {
-  ControlSend, ahk_parent, {Space}, World of Warcraft ahk_exe Wow.exe
+  ControlSend, ahk_parent, {Space}, World of Warcraft ahk_exe WowClassic.exe
 }
 
 Random, rand, 9, 17 ; afk timer random wait time in minutes
@@ -221,13 +221,13 @@ Return
     MsgBox, 4,, Close macro?
     IfMsgBox Yes
     {
-      WinActivate, World of Warcraft ahk_exe Wow.exe
+      WinActivate, World of Warcraft ahk_exe WowClassic.exe
       SendInput, !{F4}
       ExitApp, User confirmed exit after alt-F4
     }
     else
     {
-      WinActivate, World of Warcraft ahk_exe Wow.exe
+      WinActivate, World of Warcraft ahk_exe WowClassic.exe
       SendInput, !{F4}
     }
   }
@@ -252,7 +252,7 @@ jumpTimer:
   else {
     Random, shortRand,1, 1000
     Sleep, %shortRand%
-    ControlSend, , {Space}, World of Warcraft ahk_exe Wow.exe
+    ControlSend, , {Space}, World of Warcraft ahk_exe WowClassic.exe
   }
 
   Random, rand, 9, 17 ; new afk timer random wait time in minutes
@@ -314,7 +314,7 @@ findBnetPlayButton() {
   newWowStarted := 0
   wowArray = []
   ; loop images to find play button
-  while (!WinExist("World of Warcraft ahk_exe Wow.exe")) {
+  while (!WinExist("World of Warcraft ahk_exe WowClassic.exe")) {
 
     Run, %bnetPath%
 
@@ -336,12 +336,12 @@ findBnetPlayButton() {
       if (X) {
         MouseClick, left, X, Y, 1
         X := 0
-        Sleep 5000
+        Sleep 10000
       }
     }
   }
 
-  Process, Exist, Wow.exe
+  Process, Exist, WowClassic.exe
   wowProcess := ErrorLevel
 }
 
@@ -387,7 +387,7 @@ getBnetPath() {
 ClipChanged() {
 	clip := Clipboard
 	if (RegExMatch(Clipboard, "/script DEFAULT_CHAT_FRAME:AddMessage") > 0 ) {
-    WinActivate, World of Warcraft ahk_exe Wow.exe
+    WinActivate, World of Warcraft ahk_exe WowClassic.exe
     KeyWait, w
     SendInput,{enter}
     SendInput, %clip%{enter}
