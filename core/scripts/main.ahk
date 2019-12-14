@@ -23,7 +23,6 @@ bnetProcess := ErrorLevel
 Process, Exist, WowClassic.exe
 wowProcess := ErrorLevel
 
-
 EmptyMem()
 
 bnetPath := getBnetPath()
