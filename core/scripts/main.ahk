@@ -1,6 +1,6 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance
-SetBatchLines, -1
+SetBatchLines, 1
 SetMouseDelay, 0
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #include %A_ScriptDir%\Gdip_all.ahk
@@ -47,13 +47,15 @@ Random, rand, 9, 17 ; afk timer random wait time in minutes
 rand := rand*60*1000 ; convert minutes to milliseconds
 SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 
+
+SetBatchLines, 1
+
 /*
 * Main loop function
 */
 loopTime() {
   Loop
   {
-    SetBatchLines, 5ms
     ; If WoW window exists go ahead with main function
     if (WinExist("ahk_pid " . wowProcess)) {
 
@@ -94,7 +96,7 @@ loopTime() {
             Sleep, 2000
             ; activate battle.net client
             WinActivate, ahk_exe Battle.net.exe
-            Sleep, 3000
+            ;Sleep, 3000
             ; reload script (easier than writing additional logic)
             Reload
           }
@@ -369,6 +371,7 @@ getBnetPath() {
         {
           if (A_LoopFileName = "Battle.net.exe") {
             FileAppend , %A_LoopFileFullPath%, battle.net path.txt, UTF-8
+            SetBatchLines, 1
             return %A_LoopFileFullPath%
           }
         }
@@ -376,6 +379,7 @@ getBnetPath() {
     }
   }
   else {
+    SetBatchLines, 1
     return %bnetPath%
   }
 }
@@ -403,7 +407,7 @@ EmptyMem(PID="AHK Rocks"){
 }
 
 Join(sep, params*) {
-    for index,param in params
-        str .= param . sep
-    return SubStr(str, 1, -StrLen(sep))
+  for index,param in params
+      str .= param . sep
+  return SubStr(str, 1, -StrLen(sep))
 }
