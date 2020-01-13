@@ -43,7 +43,7 @@ else {
   ControlSend, ahk_parent, {Space}, World of Warcraft ahk_exe WowClassic.exe
 }
 
-Random, rand, 9, 17 ; afk timer random wait time in minutes
+Random, rand, 4, 9 ; afk timer random wait time in minutes
 rand := rand*60*1000 ; convert minutes to milliseconds
 SetTimer, jumpTimer, %rand% ; set timer to jump after milliseconds have passed
 
@@ -126,7 +126,6 @@ loopTime() {
 
           if (match > 0) {
             ; activate wow window
-            WinActivate, ahk_pid %wowProcess%
             ; perform regular imagesearch for same picture as needle
             ImageSearch, X, Y, 0, 0, A_ScreenWidth, A_ScreenHeight, *20 *Trans0xFF69B4 images/%A_LoopFileFullPath%
 
@@ -136,6 +135,8 @@ loopTime() {
               if (InStr(A_LoopFileName, "enter world")) {
                 Sleep 2000
               }
+              
+              WinActivate, ahk_pid %wowProcess%
               MouseClick, left, X, Y, 2
             }
           }
@@ -256,7 +257,7 @@ jumpTimer:
     ControlSend, , {Space}, World of Warcraft ahk_exe WowClassic.exe
   }
 
-  Random, rand, 9, 17 ; new afk timer random wait time in minutes
+  Random, rand, 4, 9 ; new afk timer random wait time in minutes
   rand := rand*60*1000 ; convert minutes to milliseconds
   SetTimer, jumpTimer, %rand% ; refresh timer to jump after milliseconds have passed
 Return
@@ -392,7 +393,9 @@ ClipChanged() {
 	if (RegExMatch(Clipboard, "/script DEFAULT_CHAT_FRAME:AddMessage") > 0 ) {
     WinActivate, World of Warcraft ahk_exe WowClassic.exe
     KeyWait, w
+    SetKeyDelay, 50, 50
     SendInput,{enter}
+    Sleep 50
     SendInput, %clip%{enter}
 	}
 }
